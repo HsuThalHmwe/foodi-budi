@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       {" "}
       <NavBar />
-      <Register />
+      <h1>Welcome To FooDi BuDi</h1>
     </div>
   );
 }
