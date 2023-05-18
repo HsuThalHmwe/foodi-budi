@@ -1,14 +1,17 @@
 import React from "react";
 import "./App.css";
-import NavBar from "./Components/NavBar";
+import Layout from "./Components/Layout";
 
 function App() {
+  const accessToken = localStorage.getItem("accessToken");
+  console.log("accessToken", accessToken);
+
   return (
-    <div className="App">
-      {" "}
-      <NavBar />
-      <h1>Welcome To FooDi BuDi</h1>
-    </div>
+    <Layout>
+      <div className="App">
+        <h1>Welcome To FooDi BuDi</h1>
+      </div>
+    </Layout>
   );
 }
 

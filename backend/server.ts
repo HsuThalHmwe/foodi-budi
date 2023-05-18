@@ -1,14 +1,25 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { db } from "./src/db/db";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
+import { config } from "./src/config/config";
+console.log("config:", config.jwtScrect);
+
+//console.log(process.env); //NodeJs process
 const app = express();
 const port = 5000;
 
 app.use(cors());
 app.use(express.json());
 
+app.get("/menus", async (req: Request, res: Response) => {
+  const menuResult = await db.query("select * from menus");
+  res.send(menuResult.rows);
+});
 //http:localhost5000/auth/register
 app.post("/auth/register", async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -36,8 +47,14 @@ app.post("/auth/login", async (req: Request, res: Response) => {
   if (!userResult.rows.length) return res.sendStatus(401);
   const user = userResult.rows[0];
   const hashedpassword = user.password;
+  delete user.password;
   const isCorrectPassword = await bcrypt.compare(password, hashedpassword);
-  return isCorrectPassword ? res.sendStatus(200) : res.sendStatus(401);
+  if (isCorrectPassword) {
+    //console.log(config.jwtScrect);
+    const accessToken = jwt.sign(user, config.jwtScrect);
+    return res.send({ accessToken });
+  }
+  return res.sendStatus(401);
 });
 
 app.listen(port, () => {
