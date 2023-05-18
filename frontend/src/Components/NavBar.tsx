@@ -6,11 +6,90 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
+import LunchDiningIcon from "@mui/icons-material/LunchDining";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
+import ClassIcon from "@mui/icons-material/Class";
+import CategoryIcon from "@mui/icons-material/Category";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import {
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+
+const sidebarMenuItems = [
+  { id: 1, label: "Orders", icon: <LocalMallIcon />, route: "/orders" },
+  { id: 2, label: "Menus", icon: <LocalDiningIcon />, route: "/menus" },
+  {
+    id: 3,
+    label: "Menu Categories",
+    icon: <CategoryIcon />,
+    route: "/menu-categories",
+  },
+  { id: 4, label: "Addons", icon: <LunchDiningIcon />, route: "/addons" },
+  {
+    id: 5,
+    label: "Addon Categories",
+    icon: <ClassIcon />,
+    route: "/addon-categories",
+  },
+  {
+    id: 6,
+    label: "Locations",
+    icon: <LocationOnIcon />,
+    route: "/locations",
+  },
+  { id: 7, label: "Settings", icon: <SettingsIcon />, route: "/settings" },
+];
 
 const NavBar = () => {
+  const [open, setOpen] = useState(false);
+
+  const renderDrawer = () => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={() => {
+        setOpen(false);
+      }}
+      onKeyDown={() => {
+        setOpen(false);
+      }}
+    >
+      <List>
+        {sidebarMenuItems.slice(0, 6).map((menuItem) => (
+          <ListItem key={menuItem.id} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>{menuItem.icon}</ListItemIcon>
+              <ListItemText primary={menuItem.label} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {sidebarMenuItems.slice(-1).map((menuItem) => (
+          <ListItem key={menuItem.id} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>{menuItem.icon}</ListItemIcon>
+              <ListItemText primary={menuItem.label} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ bgcolor: "pink" }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -18,6 +97,9 @@ const NavBar = () => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={() => {
+              setOpen(true);
+            }}
           >
             <MenuIcon />
           </IconButton>
@@ -27,6 +109,11 @@ const NavBar = () => {
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
+      <Box>
+        <Drawer open={open} onClose={() => setOpen(false)}>
+          {renderDrawer()}
+        </Drawer>
+      </Box>
     </Box>
   );
 };
